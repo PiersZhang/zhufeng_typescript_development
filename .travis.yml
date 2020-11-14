@@ -1,0 +1,18 @@
+language: node_js
+node_js: 
+    - '11'
+install:
+  - npm install
+script:
+  - npm run build
+after_script:
+  - cd ./dist
+  - git init
+  - git config user.name "${USERNAME}"
+  - git config user.email "${UESREMAIL}"
+  - git add -A
+  - git commit -m "New Site"
+  - git push --force  "https://${GH_TOKEN}@${GH_REF}" "master:${GH_BRANCH}"
+branches:
+  only:
+    - master

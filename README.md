@@ -99,7 +99,7 @@ cnpm i husky  validate-commit-msg --save-dev
 - 参数 -r 表示生成 changelog 所需要使用的 release 版本数量，默认为1，全部则是0
 
 ```js
-cnpm i conventional-changelog-cli -S
+cnpm i conventional-changelog-cli -D
 ```
 
 ```json
@@ -107,7 +107,6 @@ cnpm i conventional-changelog-cli -S
     "changelogs": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0"
 }
 ```
-
 
 ### 4. 代码规范
 - 规范的代码可以促进团队合作
@@ -204,61 +203,19 @@ npm run eslint
 ```
 
 ## 5. 单元测试
-- Mocha是现在最流行的JavaScript测试框架之一，在浏览器和Node环境都可以使用。
+### 5.1 测试框架
+- [mocha](https://mochajs.org/)是现在最流行的JavaScript测试框架之一，在浏览器和Node环境都可以使用。
 - 所谓"测试框架"，就是运行测试的工具。通过它，可以为JavaScript应用添加测试，从而保证代码的质量
 
-### 5.1 安装
-```js
-cnpm i mocha  @types/mocha chai @types/chai ts-node @types/node  --save-dev
-```
-
-### 5.2 sum.ts
-```js
-export default function sum(x:number,y:number):number{
-  return x + y;
-}
-```
-
-```js
-export default function sum(x:number,y:number){
-  return (x+y).toPrecision(10);
-}
-```
-
-### 5.3 sum.test.ts
-- 通常，测试脚本与所要测试的源码脚本同名，但是后缀名为.test.js（表示测试）或者.spec.js（表示规格）。比如，add.js的测试脚本名字就是add.test.js
-- 测试脚本里面应该包括一个或多个describe块，每个describe块应该包括一个或多个it块
-- describe块称为"测试套件"（test suite），表示一组相关的测试。它是一个函数，第一个参数是测试套件的名称（"加法函数的测试"），第二个参数是一个实际执行的函数。
-- it块称为"测试用例"（test case），表示一个单独的测试，是测试的最小单位。它也是一个函数，第一个参数是测试用例的名称（"1 加 1 应该等于 2"），第二个参数是一个实际执行的函数。
-
-```js
-import sum from '../src/sum';
-import * as assert from 'assert';
-import * as chai from 'chai'
-describe('test sum',()=>{
-  it('1+1=2',()=>{
-    assert.equal(sum(1,1),2);
-  })
-  it('2+2=4',()=>{
-    chai.expect(2+2).to.be.equal(4);
-  })
-});
-```
-
-```js
-it('0.1+0.2=0.3',()=>{
-    assert.equal(sum(.1,.2),.3);
-})
-```
-
-### 5.4 断言库
+### 5.2 断言库
 - 所谓"断言"，就是判断源码的实际执行结果与预期结果是否一致，如果不一致就抛出一个错误
 - 所有的测试用例（it块）都应该含有一句或多句的断言。它是编写测试用例的关键。断言功能由断言库来实现，Mocha本身不带断言库，所以必须先引入断言库
 
-#### 5.4.1 assert
--  assert.equal 用于判断两个值是否相等
 
-#### 5.4.2 chai
+#### 5.2.1 assert
+-  `assert.equal` 用于判断两个值是否相等
+
+#### 5.2.2 chai
 ```js
 // 相等或不相等
 expect(1 + 1).to.be.equal(2);
@@ -279,7 +236,7 @@ expect(person).to.be.an.instanceof(Person);
 
 //包含
 expect([1,2,3]).to.include(2);
-expect('zhufeng').to.contain('feng');
+expect('zhufeng').to.contain('zhu');
 expect({ name: 'zhufeng', age: 9 }).to.include.keys('name');
 
 // 是否为空
@@ -292,198 +249,53 @@ expect('zhufengnodejs@126.com').to.match(/^zhufeng/);
 ```
 > 头部是expect方法，尾部是断言方法，比如equal、a/an、ok、match等。两者之间使用to或to.be连接
 
-### 5.5 指定测试脚本文件
-- mocha命令后面紧跟测试脚本的路径和文件名，可以指定多个测试脚本。
-- Mocha默认运行test子目录里面的测试脚本。所以，一般都会把测试脚本放在test目录里面，然后执行mocha就不需要参数了
-- 加上--recursive参数，就会执行test子目录下面所有的层的测试用例
-- 命令行指定测试脚本时，可以使用通配符，同时指定多个文件
 
+### 5.3 编写测试
 ```js
-mocha spec/{a,b}.js      执行spec目录下面的a.js和b.js
-mocha test/*.js     执行test目录下面的所有文件
-mocha test/**/*.js   执行test目录下面任何子目录中、文件后缀名为js的测试脚本
+cnpm i mocha  @types/mocha chai @types/chai ts-node @types/node  --save-dev
 ```
 
-### 5.6 tsconfig.json
-```json
-{
-  "compilerOptions": {
-    "module": "commonjs"
-  }
-```
-
-### 5.7 package.json
-- mocha命令后面紧跟测试脚本的路径和文件名，可以指定多个测试脚本
-- Mocha默认运行`test`子目录里面的测试脚本。所以，一般都会把测试脚本放在`test`目录里面，然后执行mocha就不需要参数了
-- 加上--recursive参数可以保证子目录下面所有的测试用例都会执行
-
-```json
-  "scripts": {
-    "test": "set TS_NODE_COMPILER_OPTIONS={\"module\":\"commonjs\"}  && mocha --require ts-node/register --watch --watch-extensions ts test/**/*"
-  },
-```
-
-> 如果"module": "es2015"的话则需要在命令行中配置module规范
-
-
-
-### 5.8 配置文件mocha.opts
-- Mocha允许在test目录下面，放置配置文件mocha.opts，把命令行参数写在里面
-
-```json
---require ts-node/register 
---watch 
---watch-extensions ts
-test/sum.test.ts
-```
-
-### 5.9 方法调用
-- Sinon 是用于 JavaScript 的测试框架，适用于任何单元测试框架。
-- Sinon 将测试为三种类型：
-  - Spies：提供有关函数调用的信息，而不会影响其行为
-  - Stubs：类似于 Spies，但完全取代了功能。这样就可以使存根函数做任何你喜欢的事情 - 抛出异常，返回一个特定的值等等
-  - Mocks：通过组合 Spies 和 Stubs，可以更轻松地替换整个对象
-
-||监控函数执行|真正执行原函数|替换原有实现|提供行为描述|
-|:----|:----|:----|:----|:----|
-|spy|是|是| | |
-|stub|是| |是| |
-|mock|是| |是|是|
-
+#### 5.3.1 编写功能
+src\sum.ts
 ```js
-npm install sinon @types/sinon -D
-```
-
-#### 5.9.1 要测试的类
-src\todo.ts
-```js
-export default class Todos{
-  private todos:string[]=[]
-  private store:any
-  constructor(store:any){
-    this.store=store;
-  }  
-  add(todo:string){
-    this.todos.push(todo);
-  }
-  print(){
-    console.log(this.todos);
-  }
-  save(){
-    this.store.save(this.todos);
-  }
+export default function sum(x:number,y:number):number{
+  return x + y;
 }
 ```
 
-#### 5.9.2 spy
-- 提供有关函数调用的信息，而不会影响其行为
-```js
-import * as sinon from "sinon";
-import * as  chai  from "chai";
-import Todos from "../src/todos";
-describe("测试 Todos", () => {
-  it("spy print", () => {
-    let store = {save(){}};
-    const t = new Todos(store);
-    // 用 sinon.spy 监控 console.log 函数的执行，并不替换其原有的实现
-    sinon.spy(console, "log");
-    t.add("eat");
-    t.add("sleep");
-    t.print();//函数真正执行了
-    // @ts-ignore console.log.calledOnce 无法识别 注释功能。这些注释是一种轻量级的方法来抑制下一行中出现的任何错误。
-    // 如果 spy 监控的 console.log 函数刚好被调用一次，则返回 true
-    chai.expect(console.log.calledOnce).to.be.true;
-  });
-});
-```
+#### 5.3.2 编写测试用例
+- 通常，测试脚本与所要测试的源码脚本同名，但是后缀名为`.test.js`(表示测试)或者`.spec.js`(表示规格)
+- 测试脚本里面应该包括一个或多个`describe`块，每个describe块应该包括一个或多个it块
+- describe块称为"测试套件"（test suite），表示一组相关的测试。它是一个函数，第一个参数是测试套件的名称（"加法函数的测试"），第二个参数是一个实际执行的函数。
+- it块称为`测试用例`，表示一个单独的测试，是测试的最小单位。它也是一个函数，第一个参数是测试用例的名称（"1 加 1 应该等于 2"），第二个参数是一个实际执行的函数。
 
-#### 5.9.3 stub
-- 类似于 spy，但完全取代了功能。这样就可以使存根函数做任何你喜欢的事情 - 抛出异常，返回一个特定的值等等
-
-```js
-import * as  sinon from "sinon";
-import { expect } from "chai";
-import Todos from "../src/todos";
-describe("测试 Todos", () => {
-  it("stub", () => {
-    let store = {save(){}};
-    const todos = new Todos(store);
-    // 用 stub 模拟 t.add 函数，stubAdd 函数被模拟为一个空函数
-    const stubAdd = sinon.stub(todos, "add").callsFake(() => {});
-    // 执行被模拟的 stubAdd 函数，这时候 'eat' 并没有被真正地 push
-    stubAdd("eat");
-    // 尝试打印，会打印出 []
-    todos.print();
-    // 我们期望 stubAdd 被执行了一次
-    expect(stubAdd.calledOnce).to.be.true;
-  });
-});
-```
-
-#### 5.9.4 mock
-- 通过组合 Spies 和 Stubs，可以更轻松地替换整个对象
-
-```js
-import * as  sinon from "sinon";
-import { expect } from "chai";
-import Todos from "../src/todos";
-describe("测试 Todos", () => {
-  it("mock", () => {
-    let store = {save(){}};
-    const todos = new Todos(store);
-    // 这时候 console 已经被 mock 完全 mock 了
-    // 这里可以调用console下的任何方法，但并不会执行
-    const mock = sinon.mock(console);
-    // 由于 console 已经完全被 mock了，所以我们这里可以提前描述我们预期的行为
-    mock.expects("log").calledOnce;
-    todos.add("eat");
-    todos.print();
-    // 校验
-    mock.verify();
-  });
-});
-```
-
-## 6. 为JS添加TS支持
-
-### 6.1 sum.js 
-src\sum.js 
-```js
-/**
- * 可以使用注释给参数添加类型
- * @param {number} x  
- * @param {number} y 
- */
-export default function sum(x,y){
-  return (x+y).toPrecision(10);
-}
-```
-
-### 6.3 sum.test.ts
 test\sum.test.ts
 ```js
 import sum from '../src/sum';
-import  assert from 'assert';
+import * as assert from 'assert';
+import * as chai from 'chai'
 describe('test sum',()=>{
-  it('1+2=3',()=>{
-    assert.equal(sum(1,2),3);
+  it('1+1=2',()=>{
+    assert.equal(sum(1,1),2);
   })
-  it('0.1+0.2=0.3',()=>{
-    sum(1,2);
-    assert.equal(sum(0.1,0.2),0.3);
+  it('2+2=4',()=>{
+    chai.expect(2+2).to.be.equal(4);
   })
 });
 ```
 
-### 6.3 tsconfig.json
+#### 5.3.3 package.json
 ```diff
-{
-  "compilerOptions": {
-+     "checkJs": true, //允许代码中使用JS
-+     "checkJs": true, //可以对JS进行类型检查
+  "scripts": {
+    "build": "npm run eslint && tsc",
+    "eslint": "eslint src --ext .ts",
+    "eslint:fix": "eslint src --ext .ts --fix",
+    "changelogs": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
++   "test": "mocha --require ts-node/register --watch --watch-extensions ts test/**/*"
+  },
 ```
 
-## 7. 持续集成
+## 6. 持续集成
 - [Travis CI](https://travis-ci.com) 提供的是持续集成服务（Continuous Integration，简称 CI）。它绑定 Github 上面的项目，只要有新的代码，就会自动抓取。然后，提供一个运行环境，执行测试，完成构建，还能部署到服务器
 - 持续集成指的是只要代码有变更，就自动运行构建和测试，反馈运行结果。确保符合预期以后，再将新代码集成到主干
 - 持续集成的好处在于，每次代码的小幅变更，就能看到运行结果，从而不断累积小的变更，而不是在开发周期结束时，一下子合并一大块代码
@@ -514,7 +326,7 @@ script:  npm test
   - script 阶段：运行脚本
 
 #### 7.3.2 install
-- `install`字段用来指定安装脚本  `install: npm install -g npm`
+- `install`字段用来指定安装脚本  `install: npm install`
 - 如果不需要安装，即跳过安装阶段，就直接设为true `install: true`
 
 #### 7.3.3 script 
