@@ -1,3 +1,3 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-ReactDOM.render(<h1>hello5</h1>,document.getElementById('root'));
+ReactDOM.render(<h1>hello6</h1>,document.getElementById('root'));
