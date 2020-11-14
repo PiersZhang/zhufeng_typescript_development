@@ -12,7 +12,7 @@ after_script:
   - git config user.email "${UESREMAIL}"
   - git add -A
   - git commit -m "New Site"
-  - git push --force  "https://${GH_TOKEN}@${GH_REF}" "master:${GH_BRANCH}"
+  - git push --force  "https://github.com/zhufengnodejs/zhufeng_typescript_development.git" "main:gh-pages"
 branches:
   only:
     - main
