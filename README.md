@@ -42,7 +42,7 @@ license: (ISC) MIT
   - 使用`conventional-changelog-cli`工具
 
 ```js
-cnpm i commitizen  validate-commit-msg conventional-changelog-cli -S
+cnpm i commitizen  validate-commit-msg conventional-changelog-cli -D
 commitizen init cz-conventional-changelog --save --save-exact
 git cz
 ```
@@ -75,9 +75,28 @@ git cz
 |revert|回滚到上一个版本|
 |ci|CI 配置，脚本文件等更新|
 
-#### 3.4 生成 CHANGELOG.md
+#### 3.4 husky
+- `validate-commit-msg`可以来检查我们的commit规范
+- husky可以把`validate-commit-msg`作为一个`githook`来验证提交消息
+
+
+```js
+cnpm i husky  validate-commit-msg --save-dev
+```
+
+```json
+  "husky": {
+    "hooks": {
+      "commit-msg": "validate-commit-msg"
+    }
+  }
+```
+
+#### 3.5 生成CHANGELOG.md
+- `conventional-changelog-cli` 默认推荐的 commit 标准是来自angular项目
 - 参数`-i CHANGELOG.md`表示从 `CHANGELOG.md` 读取 `changelog`
 - 参数 -s 表示读写 `CHANGELOG.md` 为同一文件
+- 参数 -r 表示生成 changelog 所需要使用的 release 版本数量，默认为1，全部则是0
 
 ```js
 cnpm i conventional-changelog-cli -S
@@ -85,64 +104,37 @@ cnpm i conventional-changelog-cli -S
 
 ```json
 "scripts": {
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
-    "all-changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0"
-}
-```
-
-- 这条命令产生的 changelog 是基于上次 tag 版本之后的变更（Feature、Fix、Breaking Changes等等）所产生的
-- 如果你想生成之前所有 `commit` 信息产生的 changelog 则需要使用这条命令
-```js
-conventional-changelog -p angular -i CHANGELOG.md -s -r 0
-```  
-- 其中 -r 表示生成 changelog 所需要使用的 release 版本数量，默认为1，全部则是0。
-
-
-#### 3.4 precommit钩子
-- `conventional-changelog-cli` 默认推荐的 commit 标准是来自angular项目
-
-```js
-cnpm i husky  validate-commit-msg --save-dev
-```
-
-```json
-"scripts": {
-    "validate-commit-msg": "validate-commit-msg",
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0"
+    "changelogs": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0"
 }
 ```
 
 
-## 2. 编译参数
-- [编译参数](https://www.tslang.cn/docs/handbook/compiler-options.html)
+### 4. 代码规范
+- 规范的代码可以促进团队合作
+- 规范的代码可以降低维护成本
+- 规范的代码有助于 code review(代码审查)
 
-|参数|功能|
-|:----|:----|
-|rootDir,outDir|配置输入输出目录|
-|lib,jsx|添加基础库的能力|
-|noImplicitAny,strict|更严格的模式|
-|module,target,declaration,sourceMap|控制输出的内容|
-|watch|观察模式|
-|allowJs|允许编译javascript文件|
+#### 4.1 常见的代码规范文档
+- [airbnb中文版](https://github.com/lin-123/javascript)
+- [standard中文版](https://github.com/standard/standard/blob/master/docs/README-zhcn.md)
+- [百度前端编码规范](https://github.com/ecomfe/spec)
+- [styleguide](https://github.com/fex-team/styleguide/blob/master/css.md)
+- [CSS编码规范](https://github.com/ecomfe/spec/blob/master/css-style-guide.md)
 
+#### 4.2 代码检查
+- [Eslint](https://eslint.org) 是一款插件化的 JavaScript 静态代码检查工具，ESLint 通过规则来描述具体的检查行为
 
-## 3. 代码检查
-
-## 3. 代码检查
-- ESLint 是一款插件化的 JavaScript 静态代码检查工具，ESLint 通过规则来描述具体的检查行为
-- [eslint](https://eslint.org)
-
-### 3.1 模块安装
+##### 4.2.1 模块安装
 ```js
 cnpm i eslint typescript @typescript-eslint/parser @typescript-eslint/eslint-plugin --save-dev
 ```
 
-### 3.2 eslintrc配置文件
+##### 4.2.2 eslintrc配置文件
 - [英文rules](https://eslint.org/docs/rules/)
 - [中文rules](https://cn.eslint.org/docs/rules/)
 - 需要添加`parserOptions`以支持模块化的写法
-- .eslintrc.js
 
+.eslintrc.js
 ```js
 module.exports = {
     "parser":"@typescript-eslint/parser",
@@ -163,7 +155,9 @@ module.exports = {
 ```
 
 
-### 3.3 npm命令
+##### 4.2.3 代码检查
+
+package.json
 ```json
 "scripts": {
     "start": "webpack",
@@ -173,76 +167,41 @@ module.exports = {
   }
 ```
 
-代码
+src/1.ts
 ```js
 var name2 = 'zhufeng';;;
 if(true){
     let a = 10;
 }
 ```
-检查结果
+
+执行命令
 ```js
-src\helloworld.ts
-  1:1   error  Unexpected var, use let or const instead      no-var
-  1:23  error  Unnecessary semicolon                         no-extra-semi
-  1:24  error  Unnecessary semicolon                         no-extra-semi
-  3:1   error  Expected indentation of 2 spaces but found 4  @typescript-eslint/inden
+npm run eslint
+1:1   error  Unexpected var, use let or const instead      no-var
+1:23  error  Unnecessary semicolon                         no-extra-semi
+1:24  error  Unnecessary semicolon                         no-extra-semi
+3:1   error  Expected indentation of 2 spaces but found 4  @typescript-eslint/indent
 ```
-### 3.4 配置自动修复
-- 安装vscode的eslint插件
-- 配置参数
+
+##### 4.2.4 配置自动修复
+- 安装vscode的[eslint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)插件
+- 配置自动修复参数
+
 .vscode\settings.json
 ```js
 {
-    "eslint.autoFixOnSave": true,
     "eslint.validate": [
         "javascript",
         "javascriptreact",
-        {
-            "language": "typescript",
-            "autoFix": true
-        },
-         {
-            "language": "typescriptreact",
-            "autoFix": true
-        }
-    ]
-}
+        "typescript",
+        "typescriptreact"
+    ],
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    }
+  }
 ```
-![eslintplugin](http://img.zhufengpeixun.cn/eslintplugin.png)
-
-![eslint](http://img.zhufengpeixun.cn/eslint.png)
-
-## 4. Git Hooks 检查
-- Git 基本已经成为项目开发中默认的版本管理软件，在使用 Git 的项目中，我们可以为项目设置 Git Hooks 来帮我们在提交代码的各个阶段做一些代码检查等工作
-- 钩子（Hooks） 都被存储在 Git 目录下的 hooks 子目录中。 也就是绝大部分项目中的 .git/hooks 目录
-- [钩子](https://git-scm.com/book/zh/v2/%E8%87%AA%E5%AE%9A%E4%B9%89-Git-Git-%E9%92%A9%E5%AD%90)分为两大类，客户端的和服务器端的
-  - 客户端钩子主要被提交和合并这样的操作所调用
-  - 而服务器端钩子作用于接收被推送的提交这样的联网操作，这里我们主要介绍客户端钩子
-
-### 4.1 pre-commit
-- `pre-commit` 就是在代码提交之前做些东西，比如代码打包，代码检测，称之为钩子（hook）
-- 在commit之前执行一个函数（callback）。这个函数成功执行完之后，再继续commit，但是失败之后就阻止commit
-- 在.git->hooks->下面有个pre-commit.sample*，这个里面就是默认的函数(脚本)样本
-
-### 4.2 安装pre-commit
-```js
-npm install pre-commit --save-dev
-```
-
-### 4.3 配置脚本
-```json
-"scripts": {
-    "build": "tsc",
-    "eslint": "eslint src --ext .ts",
-    "eslint:fix": "eslint src --ext .ts --fix"
-  },
-  "pre-commit": [
-    "eslint"
-  ]
-```
-
-> 如果没有在`.git->hooks`目录下生成`pre-commit`文件的话，则要手工创建`node ./node_modules/pre-commit/install.js`
 
 ## 5. 单元测试
 - Mocha是现在最流行的JavaScript测试框架之一，在浏览器和Node环境都可以使用。
