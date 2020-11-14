@@ -16,3 +16,7 @@ after_script:
 branches:
   only:
     - main
+env:
+  global:
+  - GH_REF: https://github.com/zhufengnodejs/zhufeng_typescript_development.git
+  - secure: zhufengnodejs    
