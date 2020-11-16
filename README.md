@@ -300,17 +300,16 @@ describe('test sum',()=>{
 - 持续集成指的是只要代码有变更，就自动运行构建和测试，反馈运行结果。确保符合预期以后，再将新代码集成到主干
 - 持续集成的好处在于，每次代码的小幅变更，就能看到运行结果，从而不断累积小的变更，而不是在开发周期结束时，一下子合并一大块代码
 
-### 7.1 登录并创建项目
+### 6.1 登录并创建项目
 - [Travis CI](https://travis-ci.com) 只支持 Github,所以你要拥有`GitHub`帐号
 - 该帐号下面有一个项目,面有可运行的代码,还包含构建或测试脚本
-- 你需要激活了一个仓库，Travis 会监听这个仓库的所有变化
+- 你需要激活了一个仓库，`Travis` 会监听这个仓库的所有变化
 
-### 7.2 .travis.yml
+### 6.2 .travis.yml
 - `Travis` 要求项目的根目录下面，必须有一个`.travis.yml`文件。这是配置文件，指定了 Travis 的行为
 - 该文件必须保存在 Github 仓库里面，一旦代码仓库有新的 `Commit`，Travis 就会去找这个文件，执行里面的命令
 - 这个文件采用 YAML 格式。下面是一个最简单的 Node 项目的`.travis.yml`文件
-- language 字段指定了默认运行环境,[所有的语言在此](https://docs.travis-ci.com/user/languages)
-- node_js: "11" 表示不执行任何脚本，状态直接设为成功
+  - language 字段指定了默认运行环境,[所有的语言在此](https://docs.travis-ci.com/user/languages)
 
 ```js
 language: node_js
@@ -319,99 +318,32 @@ node_js:
 install: npm install
 script:  npm test  
 ```
-### 7.3 运行流程
-#### 7.3.1 运行流程
-- Travis 的运行流程很简单，任何项目都会经过两个阶段
-  - install 阶段：安装依赖
-  - script 阶段：运行脚本
 
-#### 7.3.2 install
-- `install`字段用来指定安装脚本  `install: npm install`
-- 如果不需要安装，即跳过安装阶段，就直接设为true `install: true`
-
-#### 7.3.3 script 
-- script字段用来指定构建或测试脚本
-```js
-script: npm run build
-```
-
-#### 7.3.4 钩子方法
-Travis 为上面这些阶段提供了7个钩子
-```js
-before_install  安装阶段之前执行
-install 安装
-before_script 脚本阶段之前执行
-script 脚本阶段
-aftersuccess or afterfailure 脚本成功或失败
-[OPTIONAL] before_deploy 布署之前
-[OPTIONAL] deploy 布署
-[OPTIONAL] after_deploy 布署之后
-after_script  脚本阶段之后
-```
-
-### 7.4 实战
-#### 7.4.1 安装hexo
-- [hexo](https://hexo.io/zh-cn/docs/)是一个快速、简洁且高效的博客框架
+### 6.3 实战
+#### 6.3.1 生成项目并上传github
 
 ```js
-$ npm install -g hexo-cli
+npx create-react-app zhufeng-typescript-development
 ```
 
-#### 7.4.2 生成项目
-```js
-hexo init zfblog
-cd zfblog
-npm install
-```
-
-#### 7.4.3 启动项目
-```js
-hexo generate
-hexo server
-hexo deploy
-```
-
-#### 7.4.4 布署项目
-```js
-$ cnpm install eslint hexo-deployer-git --save
-cnpm generate
-cnpm deploy
-```
-
-_config.yml
-```yaml
-# Deployment
-## Docs: https://hexo.io/docs/deployment.html
-deploy:
-  type: git
-  repo: https://github.com/zhufengnodejs/zfblog2.git
-  branch: gh-pages
-  message: 
-```
-
-> https://zhufengnodejs.github.io/zfblog2
-
-#### 7.4.5 同步仓库
+#### 6.3.2 同步仓库
 - 登录[travis-ci.com](https://travis-ci.com/)选择同步仓库
 
-![syncrepos](http://img.zhufengpeixun.cn/1.syncrepos.png)
-
-#### 7.4.6 设置仓库环境变量
+#### 6.3.3 设置仓库环境变量
 |变量名|含义|
 |:----|:----|
 |USERNAME|git用户名|zhufengnodejs|
 |UESREMAIL|git用户邮箱|zhufengnodejs@126.com|
 |GH_TOKEN|用户生成的令牌| |
-|GH_REF|仓库地址|github.com/zhufengnodejs/zfblog3.git|
+|GH_REF|仓库地址|github.com/zhufengnodejs/zhufeng_typescript_development.git|
 |GH_BRANCH|推送的pages分支|gh-pages|
 
-![2.settings](http://img.zhufengpeixun.cn/2.settings.png)
 
-#### 7.4.7 Github生成访问令牌 (即添加授权)
+#### 6.3.4 Github生成访问令牌 (即添加授权)
 - 访问令牌的作用就是授权仓库操作权限
 - Github>settings>Personal access tokens> Generate new token > Generate token> Copy Token
 
-#### 7.4.8 .travis.yml 
+#### 6.3.5 .travis.yml 
 
 ```yaml
 language: node_js

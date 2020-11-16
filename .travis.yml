@@ -1,6 +1,9 @@
 language: node_js
 node_js: 
     - '11'
+cache:
+  directories:
+    - node_modules    
 install:
   - npm install
 script:
@@ -8,8 +11,8 @@ script:
 after_script:
   - cd ./dist
   - git init
-  - git config user.name "${USERNAME}"
-  - git config user.email "${UESREMAIL}"
-  - git add -A
-  - git commit -m "New Site"
-  - git push --force  "https://github.com/zhufengnodejs/zhufeng_typescript_development.git" "gh-pages" 
+  - git config user.name "zhufengnodejs"
+  - git config user.email "zhufengnodejs@126.com"
+  - git add .
+  - git commit -m "react project"
+  - git push --force --quiet  "https://${GH_TOKEN}@github.com/zhufengnodejs/zhufeng_typescript_development.git" master:gh-pages
