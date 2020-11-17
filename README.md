@@ -514,12 +514,31 @@ src\index.tsx
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 let root: HTMLElement | null = document.getElementById('root');
-interface Attributes {
+interface Props {
   className: string
 }
-let props: Attributes = { className: 'title' };
-let element: React.DetailedReactHTMLElement<Attributes, HTMLDivElement> = React.createElement<Attributes, HTMLDivElement>('div', props, 'hello');
+let props: Props = { className: 'title' };
+let element: React.DetailedReactHTMLElement<Props, HTMLDivElement> = (
+  React.createElement<Props, HTMLDivElement>('div', props, 'hello')
+)
 ReactDOM.render(element, root);
+```
+
+src\typings.tsx
+```js
+export interface ReactElement<P = any, T extends string=string> {
+  type: T;
+  props: P;
+}
+
+export type ReactText = string | number;
+export type ReactChild = ReactElement | ReactText;
+export type ReactNode = ReactChild | boolean | null | undefined;
+
+export declare function createElement<P extends {}>(
+  type: string,
+  props?: P,
+  ...children: ReactNode[]): ReactElement<P>;
 ```
 
 ### 8.2 函数组件
