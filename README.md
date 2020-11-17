@@ -202,6 +202,113 @@ npm run eslint
   }
 ```
 
+## 5. 支持React
+### 5.1 安装
+```js
+cnpm i typescript webpack webpack-cli webpack-dev-server ts-loader cross-env webpack-merge clean-webpack-plugin html-webpack-plugin -D
+cnpm i babel-loader @babel/core @babel/cli @babel/plugin-proposal-class-properties @babel/plugin-proposal-object-rest-spread @babel/preset-env @babel/preset-typescript -D
+```
+
+### 5.2 webpack.config.js
+webpack.config.js
+```js
+const webpack = require("webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const path = require("path");
+module.exports = {
+  mode: "development",
+  devtool:false,
+  entry: "./src/index.tsx",
+  output: {
+    filename: "[name].[hash].js",
+    path: path.join(__dirname, "dist"),
+  },
+  devServer: {
+    hot: true,
+    contentBase: path.join(__dirname, "dist"),
+    historyApiFallback: {
+      index: "./index.html",
+    },
+  },
+  resolve: {
+    extensions: [".ts", ".tsx", ".js", ".json"],
+    alias: {
+      "@": path.resolve("src"), // 这样配置后 @ 可以指向 src 目录
+    },
+  },
+
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        loader: "ts-loader"
+      }
+    ],
+  },
+
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: "./src/index.html"
+    }),
+    new webpack.HotModuleReplacementPlugin()
+  ],
+};
+
+```
+
+### 5.3 src\index.tsx
+src\index.tsx
+```diff
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+let root: HTMLElement | null = document.getElementById('root');
+interface Attributes {
+  className: string
+}
+let props: Attributes = { className: 'title' };
+let element = React.createElement<Attributes, HTMLDivElement>('div', props, 'hello');
+ReactDOM.render(element, root);
+```
+
+### 5.4 src\index.html
+src\index.html
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>typescript</title>
+</head>
+<body>
+    <div id="root"></div>
+</body>
+</html>
+```
+
+### 5.5 package.json
+```diff
+{
+  "scripts": {
++    "start": "cross-env NODE_ENV=development webpack serve --config ./config/webpack.dev.js",
++    "build": "cross-env NODE_ENV=production npm run eslint && webpack --config ./config/webpack.prod.js",
+    "eslint": "eslint src --ext .ts",
+    "eslint:fix": "eslint src --ext .ts --fix",
+    "changelogs": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
+    "test": "mocha --require ts-node/register test/**/*"
+  }
+}
+```
+
+
+
+
+
+
+
+
+
+
 ## 5. 单元测试
 ### 5.1 测试框架
 - [mocha](https://mochajs.org/)是现在最流行的JavaScript测试框架之一，在浏览器和Node环境都可以使用。

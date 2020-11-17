@@ -4,12 +4,11 @@
   "description": "TypeScript工程化开发",
   "main": "index.js",
   "scripts": {
-    "start": "webpack -serve",
-    "build": "npm run eslint && webpack",
-    "eslint": "eslint src --ext .ts",
-    "eslint:fix": "eslint src --ext .ts --fix",
-    "changelogs": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
-    "test": "mocha --require ts-node/register test/**/*"
+    "start": "cross-env NODE_ENV=development webpack serve --config webpack.config.js",
+    "build": "cross-env NODE_ENV=production npm run eslint && webpack --config webpack.config.js",
+    "eslint": "eslint src --ext .tsx",
+    "eslint:fix": "eslint src --ext .tsx --fix",
+    "changelogs": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0"
   },
   "husky": {
     "hooks": {
@@ -27,14 +26,23 @@
   "author": "zhangrenyang",
   "license": "MIT",
   "devDependencies": {
+    "@babel/cli": "^7.12.1",
+    "@babel/core": "^7.12.3",
+    "@babel/plugin-proposal-class-properties": "^7.12.1",
+    "@babel/plugin-proposal-object-rest-spread": "^7.12.1",
+    "@babel/preset-env": "^7.12.1",
+    "@babel/preset-typescript": "^7.12.1",
     "@types/chai": "^4.2.14",
     "@types/mocha": "^8.0.4",
     "@types/node": "^14.14.7",
     "@typescript-eslint/eslint-plugin": "^4.7.0",
     "@typescript-eslint/parser": "^4.7.0",
+    "babel-loader": "^8.2.1",
     "chai": "^4.2.0",
+    "clean-webpack-plugin": "^3.0.0",
     "commitizen": "^4.2.2",
     "conventional-changelog-cli": "^2.1.1",
+    "cross-env": "^7.0.2",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^7.13.0",
     "hoist-non-react-statics": "^3.3.2",
@@ -48,7 +56,8 @@
     "validate-commit-msg": "^2.14.0",
     "webpack": "^5.4.0",
     "webpack-cli": "^4.2.0",
-    "webpack-dev-server": "^3.11.0"
+    "webpack-dev-server": "^3.11.0",
+    "webpack-merge": "^5.4.0"
   },
   "dependencies": {
     "@types/react": "^16.9.56",
