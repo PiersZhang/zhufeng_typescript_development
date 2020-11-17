@@ -108,108 +108,15 @@ cnpm i conventional-changelog-cli -D
 }
 ```
 
-### 4. 代码规范
-- 规范的代码可以促进团队合作
-- 规范的代码可以降低维护成本
-- 规范的代码有助于 code review(代码审查)
 
-#### 4.1 常见的代码规范文档
-- [airbnb中文版](https://github.com/lin-123/javascript)
-- [standard中文版](https://github.com/standard/standard/blob/master/docs/README-zhcn.md)
-- [百度前端编码规范](https://github.com/ecomfe/spec)
-- [styleguide](https://github.com/fex-team/styleguide/blob/master/css.md)
-- [CSS编码规范](https://github.com/ecomfe/spec/blob/master/css-style-guide.md)
-
-#### 4.2 代码检查
-- [Eslint](https://eslint.org) 是一款插件化的 JavaScript 静态代码检查工具，ESLint 通过规则来描述具体的检查行为
-
-##### 4.2.1 模块安装
-```js
-cnpm i eslint typescript @typescript-eslint/parser @typescript-eslint/eslint-plugin --save-dev
-```
-
-##### 4.2.2 eslintrc配置文件
-- [英文rules](https://eslint.org/docs/rules/)
-- [中文rules](https://cn.eslint.org/docs/rules/)
-- 需要添加`parserOptions`以支持模块化的写法
-
-.eslintrc.js
-```js
-module.exports = {
-    "parser":"@typescript-eslint/parser",
-    "plugins":["@typescript-eslint"],
-    "rules":{
-        "no-var":"error",
-        "no-extra-semi":"error",
-        "@typescript-eslint/indent":["error",2]
-    },
-    "parserOptions": {
-        "ecmaVersion": 6,
-        "sourceType": "module",
-        "ecmaFeatures": {
-          "modules": true
-        }
-    }
-}
-```
-
-
-##### 4.2.3 代码检查
-
-package.json
-```json
-"scripts": {
-    "start": "webpack",
-    "build": "tsc",
-    "eslint": "eslint src --ext .ts",
-    "eslint:fix": "eslint src --ext .ts --fix"
-  }
-```
-
-src/1.ts
-```js
-var name2 = 'zhufeng';;;
-if(true){
-    let a = 10;
-}
-```
-
-执行命令
-```js
-npm run eslint
-1:1   error  Unexpected var, use let or const instead      no-var
-1:23  error  Unnecessary semicolon                         no-extra-semi
-1:24  error  Unnecessary semicolon                         no-extra-semi
-3:1   error  Expected indentation of 2 spaces but found 4  @typescript-eslint/indent
-```
-
-##### 4.2.4 配置自动修复
-- 安装vscode的[eslint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)插件
-- 配置自动修复参数
-
-.vscode\settings.json
-```js
-{
-    "eslint.validate": [
-        "javascript",
-        "javascriptreact",
-        "typescript",
-        "typescriptreact"
-    ],
-    "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": true
-    }
-  }
-```
-
-## 5. 支持React
-### 5.1 安装
+## 4. 支持React
+### 4.1 安装
 ```js
 cnpm i typescript webpack webpack-cli webpack-dev-server ts-loader cross-env webpack-merge clean-webpack-plugin html-webpack-plugin -D
 cnpm i babel-loader @babel/core @babel/cli @babel/plugin-proposal-class-properties @babel/plugin-proposal-object-rest-spread @babel/preset-env @babel/preset-typescript -D
 ```
 
-### 5.2 webpack.config.js
+### 4.2 webpack.config.js
 webpack.config.js
 ```js
 const webpack = require("webpack");
@@ -256,7 +163,7 @@ module.exports = {
 
 ```
 
-### 5.3 src\index.tsx
+### 4.3 src\index.tsx
 src\index.tsx
 ```diff
 import * as React from 'react';
@@ -270,7 +177,7 @@ let element = React.createElement<Attributes, HTMLDivElement>('div', props, 'hel
 ReactDOM.render(element, root);
 ```
 
-### 5.4 src\index.html
+### 4.4 src\index.html
 src\index.html
 ```html
 <!DOCTYPE html>
@@ -286,7 +193,7 @@ src\index.html
 </html>
 ```
 
-### 5.5 package.json
+### 4.5 package.json
 ```diff
 {
   "scripts": {
@@ -300,119 +207,155 @@ src\index.html
 }
 ```
 
+### 5. 代码规范
+- 规范的代码可以促进团队合作
+- 规范的代码可以降低维护成本
+- 规范的代码有助于 code review(代码审查)
 
+#### 5.1 常见的代码规范文档
+- [airbnb中文版](https://github.com/lin-123/javascript)
+- [standard中文版](https://github.com/standard/standard/blob/master/docs/README-zhcn.md)
+- [百度前端编码规范](https://github.com/ecomfe/spec)
+- [styleguide](https://github.com/fex-team/styleguide/blob/master/css.md)
+- [CSS编码规范](https://github.com/ecomfe/spec/blob/master/css-style-guide.md)
 
+#### 5.2 代码检查
+- [Eslint](https://eslint.org) 是一款插件化的 JavaScript 静态代码检查工具，ESLint 通过规则来描述具体的检查行为
 
-
-
-
-
-
-
-## 5. 单元测试
-### 5.1 测试框架
-- [mocha](https://mochajs.org/)是现在最流行的JavaScript测试框架之一，在浏览器和Node环境都可以使用。
-- 所谓"测试框架"，就是运行测试的工具。通过它，可以为JavaScript应用添加测试，从而保证代码的质量
-
-### 5.2 断言库
-- 所谓"断言"，就是判断源码的实际执行结果与预期结果是否一致，如果不一致就抛出一个错误
-- 所有的测试用例（it块）都应该含有一句或多句的断言。它是编写测试用例的关键。断言功能由断言库来实现，Mocha本身不带断言库，所以必须先引入断言库
-
-
-#### 5.2.1 assert
--  `assert.equal` 用于判断两个值是否相等
-
-#### 5.2.2 chai
+##### 5.2.1 模块安装
 ```js
-// 相等或不相等
-expect(1 + 1).to.be.equal(2);
-expect(1 + 1).to.be.not.equal(3);
-let a = {name:'zhufeng'};let b = {name:'zhufeng'};
-expect(a).to.be.deep.equal(b);
-
-// 布尔值为true
-expect(true).to.be.ok;
-expect(false).to.not.be.ok;
-
-// 类型判断
-expect('zhufeng').to.be.a('string');
-expect({name:'zhufeng'}).to.be.an('object');
-function Person(){}
-let person = new Person();
-expect(person).to.be.an.instanceof(Person);
-
-//包含
-expect([1,2,3]).to.include(2);
-expect('zhufeng').to.contain('zhu');
-expect({ name: 'zhufeng', age: 9 }).to.include.keys('name');
-
-// 是否为空
-expect([]).to.be.empty;
-expect('').to.be.empty;
-expect({}).to.be.empty;
-
-// 正则匹配
-expect('zhufengnodejs@126.com').to.match(/^zhufeng/);
-```
-> 头部是expect方法，尾部是断言方法，比如equal、a/an、ok、match等。两者之间使用to或to.be连接
-
-
-### 5.3 编写测试
-```js
-cnpm i mocha  @types/mocha chai @types/chai ts-node @types/node  --save-dev
+cnpm i eslint typescript @typescript-eslint/parser @typescript-eslint/eslint-plugin --save-dev
 ```
 
-#### 5.3.1 编写功能
-src\sum.ts
+##### 5.2.2 eslintrc配置文件
+- [英文rules](https://eslint.org/docs/rules/)
+- [中文rules](https://cn.eslint.org/docs/rules/)
+- 需要添加`parserOptions`以支持模块化的写法
+
+.eslintrc.js
 ```js
-export default function sum(x:number,y:number):number{
-  return x + y;
+module.exports = {
+    "parser":"@typescript-eslint/parser",
+    "plugins":["@typescript-eslint"],
+    "rules":{
+        "no-var":"error",
+        "no-extra-semi":"error",
+        "@typescript-eslint/indent":["error",2]
+    },
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "module",
+        "ecmaFeatures": {
+          "modules": true
+        }
+    }
 }
 ```
 
-#### 5.3.2 编写测试用例
-- 通常，测试脚本与所要测试的源码脚本同名，但是后缀名为`.test.js`(表示测试)或者`.spec.js`(表示规格)
-- 测试脚本里面应该包括一个或多个`describe`块，每个describe块应该包括一个或多个it块
-- describe块称为"测试套件"（test suite），表示一组相关的测试。它是一个函数，第一个参数是测试套件的名称（"加法函数的测试"），第二个参数是一个实际执行的函数。
-- it块称为`测试用例`，表示一个单独的测试，是测试的最小单位。它也是一个函数，第一个参数是测试用例的名称（"1 加 1 应该等于 2"），第二个参数是一个实际执行的函数。
 
-test\sum.test.ts
+##### 5.2.3 代码检查
+
+package.json
+```json
+"scripts": {
+    "start": "webpack",
+    "build": "tsc",
+    "eslint": "eslint src --ext .ts",
+    "eslint:fix": "eslint src --ext .ts --fix"
+  }
+```
+
+src/1.ts
 ```js
-import sum from '../src/sum';
-import * as assert from 'assert';
-import * as chai from 'chai'
-describe('test sum',()=>{
-  it('1+1=2',()=>{
-    assert.equal(sum(1,1),2);
-  })
-  it('2+2=4',()=>{
-    chai.expect(2+2).to.be.equal(4);
-  })
+var name2 = 'zhufeng';;;
+if(true){
+    let a = 10;
+}
+```
+
+执行命令
+```js
+npm run eslint
+1:1   error  Unexpected var, use let or const instead      no-var
+1:23  error  Unnecessary semicolon                         no-extra-semi
+1:24  error  Unnecessary semicolon                         no-extra-semi
+3:1   error  Expected indentation of 2 spaces but found 4  @typescript-eslint/indent
+```
+
+##### 5.2.4 配置自动修复
+- 安装vscode的[eslint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)插件
+- 配置自动修复参数
+
+.vscode\settings.json
+```js
+{
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact"
+    ],
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    }
+  }
+```
+
+
+## 6.单元测试
+### 6.1 安装配置
+```js
+cnpm i jest @types/jest ts-jest -D
+npx ts-jest config:init
+```
+
+### 6.2 src\calculator.tsx
+src\calculator.tsx
+```js
+function sum(a: number, b: number) {
+    return a + b;
+}
+function minus(a: number, b: number) {
+    return a - b;
+}
+module.exports = {
+    sum,
+    minus
+}
+```
+
+### 6.3 __tests__\calculator.spec.tsx
+__tests__\calculator.spec.tsx
+```js
+let math = require('../src/calculator');
+test('1+1=2', () => {
+    expect(math.sum(1, 1)).toBe(2);
+});
+test('1-1=0', () => {
+    expect(math.minus(1, 1)).toBe(0);
 });
 ```
 
-#### 5.3.3 package.json
+### 6.4 package.json
+package.json
 ```diff
   "scripts": {
-    "build": "npm run eslint && tsc",
-    "eslint": "eslint src --ext .ts",
-    "eslint:fix": "eslint src --ext .ts --fix",
-    "changelogs": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
-+   "test": "mocha --require ts-node/register --watch --watch-extensions ts test/**/*"
++    "test": "jest"
   },
 ```
 
-## 6. 持续集成
+
+## 7. 持续集成
 - [Travis CI](https://travis-ci.com) 提供的是持续集成服务（Continuous Integration，简称 CI）。它绑定 Github 上面的项目，只要有新的代码，就会自动抓取。然后，提供一个运行环境，执行测试，完成构建，还能部署到服务器
 - 持续集成指的是只要代码有变更，就自动运行构建和测试，反馈运行结果。确保符合预期以后，再将新代码集成到主干
 - 持续集成的好处在于，每次代码的小幅变更，就能看到运行结果，从而不断累积小的变更，而不是在开发周期结束时，一下子合并一大块代码
 
-### 6.1 登录并创建项目
+### 7.1 登录并创建项目
 - [Travis CI](https://travis-ci.com) 只支持 Github,所以你要拥有`GitHub`帐号
 - 该帐号下面有一个项目,面有可运行的代码,还包含构建或测试脚本
 - 你需要激活了一个仓库，`Travis` 会监听这个仓库的所有变化
 
-### 6.2 .travis.yml
+### 7.2 .travis.yml
 - `Travis` 要求项目的根目录下面，必须有一个`.travis.yml`文件。这是配置文件，指定了 Travis 的行为
 - 该文件必须保存在 Github 仓库里面，一旦代码仓库有新的 `Commit`，Travis 就会去找这个文件，执行里面的命令
 - 这个文件采用 YAML 格式。下面是一个最简单的 Node 项目的`.travis.yml`文件
@@ -426,31 +369,27 @@ install: npm install
 script:  npm test  
 ```
 
-### 6.3 实战
-#### 6.3.1 生成项目并上传github
+### 7.3 实战
+#### 7.3.1 生成项目并上传github
 
 ```js
 npx create-react-app zhufeng-typescript-development
 ```
 
-#### 6.3.2 同步仓库
+#### 7.3.2 同步仓库
 - 登录[travis-ci.com](https://travis-ci.com/)选择同步仓库
 
-#### 6.3.3 设置仓库环境变量
+#### 7.3.3 设置仓库环境变量
 |变量名|含义|
 |:----|:----|
-|USERNAME|git用户名|zhufengnodejs|
-|UESREMAIL|git用户邮箱|zhufengnodejs@126.com|
 |GH_TOKEN|用户生成的令牌| |
 |GH_REF|仓库地址|github.com/zhufengnodejs/zhufeng_typescript_development.git|
-|GH_BRANCH|推送的pages分支|gh-pages|
 
-
-#### 6.3.4 Github生成访问令牌 (即添加授权)
+#### 7.3.4 Github生成访问令牌 (即添加授权)
 - 访问令牌的作用就是授权仓库操作权限
 - Github>settings>Personal access tokens> Generate new token > Generate token> Copy Token
 
-#### 6.3.5 .travis.yml 
+#### 7.3.5 .travis.yml 
 
 ```yaml
 language: node_js
