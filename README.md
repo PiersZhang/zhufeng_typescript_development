@@ -506,7 +506,7 @@ branches:
 
 ## 9.React元素
 
-![DetailedReactHTMLElement.jpg](https://img.zhufengpeixun.com/DetailedReactHTMLElement.jpg)
+![DetailedReactHTMLElements.jpg](https://img.zhufengpeixun.com/DetailedReactHTMLElements.jpg)
 
 ### 8.1 原生组件
 src\index.tsx
@@ -533,8 +533,8 @@ export interface HTMLAttributes extends DOMAttributes {
   className?: string;
 }
 
-export interface ReactElement<P = any> {
-  type: string;
+export interface ReactElement<P = any,T extends string> {
+  type: T;
   props: P;
 }
 export interface DOMElement extends ReactElement{}
@@ -570,6 +570,43 @@ let element: React.FunctionComponentElement<Props> = (
   React.createElement<Props>(Welcome, props)
 )
 ReactDOM.render(element, root);
+```
+
+```diff
+export interface DOMAttributes {
+  children?: ReactNode;
+}
+export interface HTMLAttributes extends DOMAttributes {
+  className?: string;
+}
++export type JSXElementConstructor<P> = ((props: P) => ReactElement | null)
++export interface ReactElement<P = any, T extends string | JSXElementConstructor<any> = string> {
+  type: T;
+  props: P;
+}
+export interface DOMElement extends ReactElement{}
+export interface ReactHTML { div:  HTMLDivElement }
+export interface DetailedReactHTMLElement extends DOMElement{
+  type: keyof ReactHTML;
+}
+
+export type ReactText = string | number;
+export type ReactChild = ReactElement | ReactText;
+export type ReactNode = ReactChild | boolean | null | undefined;
+
++type PropsWithChildren<P> = P & { children?: ReactNode };
++interface FunctionComponent<P = {}> {
++  (props: PropsWithChildren<P>): ReactElement | null;
++}
++interface FunctionComponentElement<P> extends ReactElement<P, FunctionComponent<P>> {}
++export declare function createElement<P extends {}>(
++  type: FunctionComponent<P>,
++  props?: P,
++  ...children: ReactNode[]): ReactElement;
+export declare function createElement<P extends {}>(
+  type: string,
+  props?: P,
+  ...children: ReactNode[]): ReactElement;
 ```
 
 ### 8.3 类组件
